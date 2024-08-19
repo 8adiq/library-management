@@ -46,11 +46,18 @@ class Library:
         """function to search for a book"""
         title,author = search_item.split(', ')
         cur = self.connection.cursor()
-        cur.execute("SELECT title, author,year_pub from books WHERE title = %s AND author = %s ", (title,author))
-        results = cur.fetchall()
 
-        for title,author,year in results:
-            print(f"{title} by {author} published in {year}")
+        cur.execute("SELECT * from books WHERE title = %s AND author = %s", (title,author))
+        existing_book = cur.fetchone()
+
+        if existing_book:
+            cur.execute("SELECT title, author,year_pub from books WHERE title = %s AND author = %s ", (title,author))
+            results = cur.fetchall()
+
+            for title,author,year in results:
+                print(f"{title} by {author} published in {year}")
+        else:
+            print(f'No book with title {title} by {author}')
 
     def display_books(self):
         """function to display all books in the library"""
