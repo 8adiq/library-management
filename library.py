@@ -28,10 +28,12 @@ class Library:
     def add_book(self,title,author,year):
         """ function to add a new book"""
 
+        # validating the year input
         if not year.isdigit() or len(year)<4:
             print('Enter a valid 4-digit year.')
             return
         
+        # making sure the title and author is provided
         if not title.strip() or author.strip():
             print(' Title and author can not be empty')
             return
@@ -54,6 +56,7 @@ class Library:
         
     def search_book(self,search_item):
         """function to search for a book"""
+        # making sure the search item is entered in the correct format
         try:
             title,author = search_item.split(', ')
         except ValueError:
