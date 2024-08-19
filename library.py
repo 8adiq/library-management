@@ -29,10 +29,18 @@ class Library:
     def add_book(self,title,author,year):
         """ function to add a new book"""
         cur = self.connection.cursor()
-        cur.execute("INSERT INTO books (title,author,year_pub) VALUES (%s,%s,%s)", (title,author,year))
-        self.connection.commit()
+
+        # checking if book already exists
+        cur.execute("SELECT * from books WHERE title = %s AND author = %s AND year_pub =%s", (title,author,year))
+        existing_book = cur.fetchone()
+
+        if existing_book:
+            print(f'{title} by {author} already in the Library')
+        else:
+            cur.execute("INSERT INTO books (title,author,year_pub) VALUES (%s,%s,%s)", (title,author,year))
+            self.connection.commit()
+            print(f'{title} by {author} has been added.')
         cur.close()
-        print(f'{title} by {author} has been added.')
         
     def search_book(self,search_item):
         """function to search for a book"""
