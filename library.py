@@ -36,21 +36,22 @@ class Library:
         
     def search_book(self,search_item):
         """function to search for a book"""
+        title,author = search_item.split(', ')
         cur = self.connection.cursor()
-        cur.execute("SELECT title, author from books WHERE title = %s OR author = %s ", (search_item,search_item))
+        cur.execute("SELECT title, author,year_pub from books WHERE title = %s AND author = %s ", (title,author))
         results = cur.fetchall()
 
-        for title,author in results:
-            print(f"{title} , {author}")
+        for title,author,year in results:
+            print(f"{title} by {author} published in {year}")
 
     def display_books(self):
         """function to display all books in the library"""
         cur = self.connection.cursor()
-        cur.execute('SELECT * FROM books')
+        cur.execute('SELECT title, author,year_pub FROM books')
         books = cur.fetchall()
         print('\n ====== All books in the library ======')
-        for i, (id,title,author,year) in enumerate(books,start=1):
-            print(f'{i}.  {title} by {author}')
+        for i, (title,author,year) in enumerate(books,start=1):
+            print(f'{i}.  {title} by {author} published in {year}')
 
     def remove_book(self,title,author):
         """function to remove a book from the library"""
@@ -80,7 +81,8 @@ def main():
             year = input("Enter the year of publishing: ")
             library.add_book(title, author,year)
         elif choice == '2':
-            search_item = input("Enter the book title or author to search: ")
+            print('Example: The Great Gatsby, John Grisham')
+            search_item = input("Enter the name of the book and it author : ")
             library.search_book(search_item)
         elif choice == '3':
             library.display_books()
